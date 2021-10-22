@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import {View, Text, TextInput, TouchableOpacity} from 'react-native'
-import { BG_SET, Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE } from '../../../helpers/globalStyles'
+import {View, Text, TextInput, TouchableOpacity, Modal} from 'react-native'
+import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, SCREEN_HEIGHT } from '../../../helpers/globalStyles'
 import { normalize } from '../../../helpers/scallingSize'
 
 export default function TransactionList(){
   const [searchValue, setSearchValue] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <View style={{flex: 1}}>
@@ -16,7 +17,8 @@ export default function TransactionList(){
         <View style={{position: 'absolute', top: normalize(36), left: 20}}>
           <Text style={{}}>ico</Text>
         </View>
-        <TouchableOpacity style={{flexDirection: 'row', position: 'absolute', top: normalize(36), right: 25}}>
+        <TouchableOpacity onPress={() => setShowModal(true)}
+        style={{flexDirection: 'row', position: 'absolute', top: normalize(36), right: 25}}>
           <Text>URUTKAN</Text>
           <Text>ico</Text>
         </TouchableOpacity>
@@ -44,6 +46,24 @@ export default function TransactionList(){
           </View>
         </View>
       </View>
+
+      <Modal transparent visible={showModal}>
+        <TouchableOpacity onPress={() => setShowModal(false)}
+        style={{flex: 1, backgroundColor: OPACITY_BLACK_5, ...ITEM_CENTER}}>
+          <View style={{backgroundColor: WHITE, height: SCREEN_HEIGHT/2, width: SCREEN_HEIGHT/2, borderRadius: 8, padding: 15 }}>
+            {filterMenu.map((item, idx) => 
+              <View key={idx} style={{flexDirection: 'row', marginVertical: 20}}>
+                <View style={{borderRadius: 50, borderColor: 'pink', borderWidth: 0.8, width: normalize(18), height: normalize(18), ...ITEM_CENTER, marginRight: 10}}>
+                  <View style={{backgroundColor: 'pink', width: normalize(12), height: normalize(12), borderRadius: 50 }} />
+                </View>
+                <Text style={Font14('OpenSans-SemiBold')}>{item}</Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   )
 }
+
+const filterMenu = ['Urutkan', 'Nama A-Z', 'Nama Z-A', 'Tanggal Terbaru', 'Tanggal Terlama']

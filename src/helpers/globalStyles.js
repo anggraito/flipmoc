@@ -16,6 +16,8 @@ export const SNOW = '#FCFCFD'
 export const DARKSLATE = '#252B42'
 export const LIGHTLATE = '#7c7c7c'
 
+export const OPACITY_BLACK_5 = 'rgba(0,0,0,0.5)'
+
 export const SHADOW_OPC = {
   shadowColor: DARKSLATE,
   shadowOffset: { width: 0, height: 4 },
