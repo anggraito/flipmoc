@@ -82,6 +82,13 @@ export const Font12 = (font, color) => ({
   includeFontPadding: false
 })
 
+export const Font13 = (font, color) => ({
+  fontFamily: font,
+  fontSize: normalize(13),
+  color: color ? color : DARKSLATE, 
+  includeFontPadding: false
+})
+
 export const Font14 = (font, color) => ({
   fontFamily: font,
   fontSize: normalize(14),
