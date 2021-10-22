@@ -1,7 +1,9 @@
 import axios from 'axios'
 import constants from '../../config/constants'
 
-const getListTransaction = () => {
+const actionsAPI = {}
+
+actionsAPI.getListTransaction = () => {
   return async () => {
     try {
       const url = `${constants.URL}`
@@ -10,10 +12,12 @@ const getListTransaction = () => {
           'Content-Type': 'application/json',
         }
       })
-      return response
+      return response.data
     }
-    catch (e) {
-      return e
+    catch (err) {
+      return err.response.data
     }
   }
 }
+
+export default actionsAPI;

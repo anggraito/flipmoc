@@ -4,7 +4,7 @@ config.environment = 'staging'
 // config.environment = 'production'
 
 config.URL = {}
-config.URL.staging = ' https://nextar.flip.id/frontend-test'
+config.URL.staging = ' https://nextar.flip.id/frontend-tes'
 config.URL.production = ' https://nextar.flip.id/frontend-test'
 
 config.APP_VERSION = {}

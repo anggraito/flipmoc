@@ -1,11 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {View, Text, TextInput, TouchableOpacity, Modal} from 'react-native'
-import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, SCREEN_HEIGHT } from '../../../helpers/globalStyles'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, 
+  SCREEN_HEIGHT } from '../../../helpers/globalStyles'
 import { normalize } from '../../../helpers/scallingSize'
+import actionsAPI from '../../../redux/actions/transaction'
 
 export default function TransactionList(){
   const [searchValue, setSearchValue] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const [listData, setListData] = useState([])
+
+  const {transaction} = useSelector(state => state)
+  const dispatch = useDispatch()
+  console.log('transaction', transaction)
+
+  useEffect(() => {
+    listTransactionAPI()
+  }, [])
+
+  function listTransactionAPI() {
+    dispatch(actionsAPI.getListTransaction())
+    .then((res) => {
+      if(res.status == 200) {
+        //toast berhasil
+        // list
+        // input to redux
+      }
+      //handle error
+      console.log('res', res)
+    })
+  }
 
   return (
     <View style={{flex: 1}}>
