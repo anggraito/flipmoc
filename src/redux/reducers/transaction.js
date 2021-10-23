@@ -8,7 +8,6 @@ const initialState = {
 
 export default transactionReducer = (state=initialState, action) => {
   const { type, payload } = action
-  console.log('----------------isiii', state, payload)
   switch (type) {
     case constants.LIST_TRANSACTION:
       return { ...state , isLoading: true }

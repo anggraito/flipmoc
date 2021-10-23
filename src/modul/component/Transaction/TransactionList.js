@@ -5,7 +5,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, 
   SCREEN_HEIGHT } from '../../../helpers/globalStyles'
 import { normalize } from '../../../helpers/scallingSize'
+import { convertDate, priceSeparator } from '../../../helpers/validator'
 import actionsAPI from '../../../redux/actions/transaction'
+import { searchItem } from './logicTransaction'
 
 export default function TransactionList(){
   const [searchValue, setSearchValue] = useState('')
@@ -14,7 +16,7 @@ export default function TransactionList(){
 
   const {transaction} = useSelector(state => state)
   const dispatch = useDispatch()
-  console.log('transaction--', Object.values(transaction.data))
+  // console.log('transaction--', Object.values(transaction.data))
 
   useEffect(() => {
     listTransactionAPI()
@@ -24,12 +26,17 @@ export default function TransactionList(){
     dispatch({type: 'LIST_TRANSACTION'}), [dispatch]
   }
 
+  const changeValueSearch = (val) => {
+    setSearchValue(val)
+    searchItem(Object.values(transaction.data), val)
+  }
+
   return (
     <View style={{flex: 1}}>
       
       <View style={{paddingHorizontal: 8, paddingVertical: 15 }}>
         <TextInput placeholder='Cari nama, bank, atau nominal'
-        value={searchValue} onChangeText={(val) => setSearchValue(val)}
+        value={searchValue} onChangeText={(val) => changeValueSearch(val)}
         style={{backgroundColor: 'pink', height: normalize(62), borderRadius: 8, paddingLeft: '10%', paddingRight: '30%'}} />
         <View style={{position: 'absolute', top: normalize(36), left: 20}}>
           <Text style={{}}>ico</Text>
@@ -44,23 +51,23 @@ export default function TransactionList(){
       <View style={{paddingHorizontal: 8, flex: 1}}>
         <FlatList data={Object.values(transaction.data)} 
         renderItem={({item, index}) => 
-          <View key={index} style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8}}>
+          <View key={index} style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
             <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
               <View style={{width: 8, backgroundColor: 'pink', height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
               <View style={{marginVertical: 15}}>
                 <Text style={Font16('Montserrat-Bold')}>{item.sender_bank} {item.beneficiary_bank}</Text>
                 <Text style={Font14('Montserrat-Bold')}>{item.beneficiary_name.toUpperCase()}</Text>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={Font13('OpenSans-Regular')}>Rp {item.amount}</Text>
+                  <Text style={Font13('OpenSans-Regular')}>Rp {priceSeparator(item.amount+item.unique_code)}</Text>
                   <Text>=</Text>
-                  <Text style={Font13('OpenSans-Regular')}>Tanggal</Text>
+                  <Text style={Font13('OpenSans-Regular')}>{convertDate(item.completed_at)}</Text>
                 </View>
               </View>
             </View>
             
             <View style={{...ITEM_CENTER, marginRight: 15}}>
               <View style={{backgroundColor: 'yellow', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8}}>
-                <Text style={Font12('OpenSans-Bold')}>Status</Text>
+                <Text style={Font12('OpenSans-Bold')}>{item.status}</Text>
               </View>
             </View>
           </View>
@@ -68,16 +75,17 @@ export default function TransactionList(){
       </View>
 
       <Modal transparent visible={showModal}>
-        <TouchableOpacity onPress={() => setShowModal(false)}
+        <TouchableOpacity 
         style={{flex: 1, backgroundColor: OPACITY_BLACK_5, ...ITEM_CENTER}}>
           <View style={{backgroundColor: WHITE, height: SCREEN_HEIGHT/2, width: SCREEN_HEIGHT/2, borderRadius: 8, padding: 15 }}>
             {filterMenu.map((item, idx) => 
-              <View key={idx} style={{flexDirection: 'row', marginVertical: 20}}>
+              <TouchableOpacity key={idx} onPress={() => setShowModal(false)}
+              style={{flexDirection: 'row', marginVertical: 20}}>
                 <View style={{borderRadius: 50, borderColor: 'pink', borderWidth: 0.8, width: normalize(18), height: normalize(18), ...ITEM_CENTER, marginRight: 10}}>
                   <View style={{backgroundColor: 'pink', width: normalize(12), height: normalize(12), borderRadius: 50 }} />
                 </View>
                 <Text style={Font14('OpenSans-SemiBold')}>{item}</Text>
-              </View>
+              </TouchableOpacity>
             )}
           </View>
         </TouchableOpacity>
