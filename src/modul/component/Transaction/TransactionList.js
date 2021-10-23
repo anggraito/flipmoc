@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {View, Text, TextInput, TouchableOpacity, Modal} from 'react-native'
+import {View, Text, TextInput, TouchableOpacity, Modal, FlatList} from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, 
@@ -10,27 +10,18 @@ import actionsAPI from '../../../redux/actions/transaction'
 export default function TransactionList(){
   const [searchValue, setSearchValue] = useState('')
   const [showModal, setShowModal] = useState(false)
-  const [listData, setListData] = useState([])
+  // const [listxData, setListData] = useState([])
 
   const {transaction} = useSelector(state => state)
   const dispatch = useDispatch()
-  console.log('transaction', transaction)
+  console.log('transaction--', Object.values(transaction.data))
 
   useEffect(() => {
     listTransactionAPI()
   }, [])
 
   function listTransactionAPI() {
-    dispatch(actionsAPI.getListTransaction())
-    .then((res) => {
-      if(res.status == 200) {
-        //toast berhasil
-        // list
-        // input to redux
-      }
-      //handle error
-      console.log('res', res)
-    })
+    dispatch({type: 'LIST_TRANSACTION'}), [dispatch]
   }
 
   return (
@@ -50,27 +41,30 @@ export default function TransactionList(){
         </TouchableOpacity>
       </View>
 
-      <View style={{paddingHorizontal: 8}}>
-        <View style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8}}>
-          <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
-            <View style={{width: 8, backgroundColor: 'pink', height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
-            <View style={{marginVertical: 15}}>
-              <Text style={Font16('Montserrat-Bold')}>Dari Bank - Untuk</Text>
-              <Text style={Font14('Montserrat-Bold')}>{'Nama Pengirim'.toUpperCase()}</Text>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={Font13('OpenSans-Regular')}>Nama Bank</Text>
-                <Text>=</Text>
-                <Text style={Font13('OpenSans-Regular')}>Tanggal</Text>
+      <View style={{paddingHorizontal: 8, flex: 1}}>
+        <FlatList data={Object.values(transaction.data)} 
+        renderItem={({item, index}) => 
+          <View key={index} style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8}}>
+            <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
+              <View style={{width: 8, backgroundColor: 'pink', height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
+              <View style={{marginVertical: 15}}>
+                <Text style={Font16('Montserrat-Bold')}>{item.sender_bank} {item.beneficiary_bank}</Text>
+                <Text style={Font14('Montserrat-Bold')}>{item.beneficiary_name.toUpperCase()}</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={Font13('OpenSans-Regular')}>Rp {item.amount}</Text>
+                  <Text>=</Text>
+                  <Text style={Font13('OpenSans-Regular')}>Tanggal</Text>
+                </View>
+              </View>
+            </View>
+            
+            <View style={{...ITEM_CENTER, marginRight: 15}}>
+              <View style={{backgroundColor: 'yellow', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8}}>
+                <Text style={Font12('OpenSans-Bold')}>Status</Text>
               </View>
             </View>
           </View>
-          
-          <View style={{...ITEM_CENTER, marginRight: 15}}>
-            <View style={{backgroundColor: 'yellow', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8}}>
-              <Text style={Font12('OpenSans-Bold')}>Status</Text>
-            </View>
-          </View>
-        </View>
+        } />
       </View>
 
       <Modal transparent visible={showModal}>
