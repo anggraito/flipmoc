@@ -15,6 +15,7 @@ export const STEELBLUE = "#3a5ea9"
 export const SNOW = '#FCFCFD'
 export const DARKSLATE = '#252B42'
 export const LIGHTLATE = '#7c7c7c'
+export const BORDERLINE = '#ededed'
 
 export const OPACITY_BLACK_5 = 'rgba(0,0,0,0.5)'
 

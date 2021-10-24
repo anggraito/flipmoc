@@ -92,7 +92,7 @@ export default function TransactionList({navigation}){
         : listData.length == 0 ? <Text>tidak ada data</Text>
         : <FlatList data={listData} 
         renderItem={({item, index}) => 
-          <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionDetailScreen')}
+          <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionDetailScreen', {itemDetail: item})}
           style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
             <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
               <View style={{width: 8, backgroundColor: 'pink', height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
