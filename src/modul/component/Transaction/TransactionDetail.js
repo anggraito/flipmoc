@@ -5,8 +5,8 @@ import { convertDate, priceSeparator } from '../../../helpers/validator'
 import HeaderNav from '../../fragment/header'
 
 export default function TransactionDetail({navigation, route}) {
-  console.log('------itemDetail', route.params.itemDetail)
   const {itemDetail} = route.params
+  
   return (
     <View>
       <HeaderNav colorStatus={WHITE} navigation={navigation} />

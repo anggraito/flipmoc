@@ -7,15 +7,17 @@ export const defaultPadding = { paddingHorizontal: 20, paddingVertical: 15 }
 
 export const WHITE = '#ffffff'
 export const WHITESMOKE = '#f7f7f7'
-export const GAINSBORO = '#e6e6e6'
-export const MIDNIGHTBLUE = '#21386e'
-export const DARKGOLDEN = '#c09b05'
-export const GOLD = '#fecb07'
-export const STEELBLUE = "#3a5ea9"
+// export const GAINSBORO = '#e6e6e6'
+// export const MIDNIGHTBLUE = '#21386e'
+// export const DARKGOLDEN = '#c09b05'
+// export const GOLD = '#fecb07'
+// export const STEELBLUE = "#3a5ea9"
 export const SNOW = '#FCFCFD'
 export const DARKSLATE = '#252B42'
-export const LIGHTLATE = '#7c7c7c'
+export const ORANGE_TOMATO = '#fc6543'
+// export const LIGHTLATE = '#7c7c7c'
 export const BORDERLINE = '#ededed'
+export const MEDIUM_SEAGREEN = '#55b683'
 
 export const OPACITY_BLACK_5 = 'rgba(0,0,0,0.5)'
 

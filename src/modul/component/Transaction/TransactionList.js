@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, TextInput, TouchableOpacity, Modal, FlatList, ActivityIndicator} from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
+import IconAn from 'react-native-vector-icons/AntDesign'
+import IconFa from 'react-native-vector-icons/FontAwesome'
 
 import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, 
-  SCREEN_HEIGHT } from '../../../helpers/globalStyles'
+  SCREEN_HEIGHT, 
+  MEDIUM_SEAGREEN,
+  ORANGE_TOMATO,
+  DARKSLATE,
+  Font10} from '../../../helpers/globalStyles'
 import { normalize } from '../../../helpers/scallingSize'
-import { convertDate, priceSeparator } from '../../../helpers/validator'
+import { capitalizeFirstLetter, convertDate, priceSeparator } from '../../../helpers/validator'
 // import actionsAPI from '../../../redux/actions/transaction'
 // import { searchItem } from './logicTransaction'
 
@@ -94,22 +100,28 @@ export default function TransactionList({navigation}){
         renderItem={({item, index}) => 
           <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionDetailScreen', {itemDetail: item})}
           style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
-            <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
-              <View style={{width: 8, backgroundColor: 'pink', height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
-              <View style={{marginVertical: 15}}>
-                <Text style={Font16('Montserrat-Bold')}>{item.sender_bank} {item.beneficiary_bank}</Text>
-                <Text style={Font14('Montserrat-Bold')}>{item.beneficiary_name.toUpperCase()}</Text>
+            <View style={{flexDirection: 'row', ...ITEM_CENTER, flex: 1}}>
+              <View style={[{width: 8, backgroundColor: MEDIUM_SEAGREEN, height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8},
+              item.status.toUpperCase() == 'PENDING' && {backgroundColor: ORANGE_TOMATO}]}/>
+              <View style={{marginVertical: 15, flex: 1, marginRight: 10}}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={Font13('OpenSans-Regular')}>Rp {priceSeparator(item.amount+item.unique_code)}</Text>
-                  <Text>=</Text>
-                  <Text style={Font13('OpenSans-Regular')}>{convertDate(item.completed_at)}</Text>
+                  <Text style={Font16('Roboto-Bold')}>{item.sender_bank.length <= 4 ? item.sender_bank.toUpperCase() : capitalizeFirstLetter(item.sender_bank) }</Text>
+                  <IconAn name='arrowright' size={18} />
+                  <Text style={Font16('Roboto-Bold')}>{item.beneficiary_bank.length <= 4 ? item.beneficiary_bank.toUpperCase() : capitalizeFirstLetter(item.beneficiary_bank)}</Text>
+                </View>
+                <Text style={Font14('Roboto-Bold')} numberOfLines={1}>{item.beneficiary_name.toUpperCase()}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={Font14('OpenSans-Regular')}>Rp {priceSeparator(item.amount)}</Text>
+                  <IconFa name='circle' size={7} style={{paddingHorizontal: 3}} />
+                  <Text style={Font14('OpenSans-Regular')}>{convertDate(item.completed_at)}</Text>
                 </View>
               </View>
             </View>
             
             <View style={{...ITEM_CENTER, marginRight: 15}}>
-              <View style={{backgroundColor: 'yellow', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8}}>
-                <Text style={Font12('OpenSans-Bold')}>{item.status}</Text>
+              <View style={[{backgroundColor: MEDIUM_SEAGREEN, paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8},
+                item.status.toUpperCase() == 'PENDING' && {backgroundColor: WHITE, borderWidth: 0.8, borderColor: ORANGE_TOMATO, borderRadius: 8}]}>
+                <Text style={Font10('OpenSans-Bold', item.status.toUpperCase() == 'PENDING' ? DARKSLATE :  WHITE )}>{item.status == 'SUCCESS' ? 'Berhasil' : 'Pengecekan'}</Text>
               </View>
             </View>
           </TouchableOpacity>
