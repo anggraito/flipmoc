@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import {View, Text, TextInput, TouchableOpacity, Modal, FlatList} from 'react-native'
+import {View, Text, TextInput, TouchableOpacity, Modal, FlatList, ActivityIndicator} from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, 
   SCREEN_HEIGHT } from '../../../helpers/globalStyles'
 import { normalize } from '../../../helpers/scallingSize'
 import { convertDate, priceSeparator } from '../../../helpers/validator'
-import actionsAPI from '../../../redux/actions/transaction'
-import { searchItem } from './logicTransaction'
+// import actionsAPI from '../../../redux/actions/transaction'
+// import { searchItem } from './logicTransaction'
 
 export default function TransactionList(){
   const [searchValue, setSearchValue] = useState('')
   const [showModal, setShowModal] = useState(false)
-  // const [listxData, setListData] = useState([])
+  const [loadList, setLoadList] = useState(true)
+  const [listData, setListData] = useState([])
 
   const {transaction} = useSelector(state => state)
   const dispatch = useDispatch()
@@ -26,9 +27,29 @@ export default function TransactionList(){
     dispatch({type: 'LIST_TRANSACTION'}), [dispatch]
   }
 
+  useEffect(() => {
+    console.log('-----------? nah', transaction.data)
+    setListData(Object.values(transaction.data))
+    if (Object.values(transaction.data).length > 0) setLoadList(false)
+  }, [transaction.data])
+
   const changeValueSearch = (val) => {
+    setLoadList(true)
     setSearchValue(val)
     searchItem(Object.values(transaction.data), val)
+  }
+
+  const searchItem = (arr, searchStr) => {
+    let search = searchStr.toLowerCase();
+  
+    var newArr = arr.filter(elem => {
+      return elem.beneficiary_name.toLowerCase().includes(search) || 
+        elem.beneficiary_bank.toLowerCase().includes(search) || 
+        elem.amount.toString().includes(search) ||
+        elem.sender_bank.toLowerCase().includes(search)
+    })
+    setLoadList(false)
+    setListData(newArr)
   }
 
   return (
@@ -49,7 +70,9 @@ export default function TransactionList(){
       </View>
 
       <View style={{paddingHorizontal: 8, flex: 1}}>
-        <FlatList data={Object.values(transaction.data)} 
+        { loadList ? <ActivityIndicator size="small" color={'pink'} />
+        : listData.length == 0 ? <Text>tidak ada data</Text>
+        : <FlatList data={listData} 
         renderItem={({item, index}) => 
           <View key={index} style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
             <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
@@ -71,7 +94,7 @@ export default function TransactionList(){
               </View>
             </View>
           </View>
-        } />
+        } />}
       </View>
 
       <Modal transparent visible={showModal}>
