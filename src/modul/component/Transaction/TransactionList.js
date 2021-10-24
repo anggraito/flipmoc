@@ -3,13 +3,16 @@ import {View, Text, TextInput, TouchableOpacity, Modal, FlatList, ActivityIndica
 import { useSelector, useDispatch } from 'react-redux'
 import IconAn from 'react-native-vector-icons/AntDesign'
 import IconFa from 'react-native-vector-icons/FontAwesome'
+import IconFe from 'react-native-vector-icons/Feather'
 
 import { Font12, Font13, Font14, Font16, ITEM_CENTER, WHITE, OPACITY_BLACK_5, 
   SCREEN_HEIGHT, 
   MEDIUM_SEAGREEN,
   ORANGE_TOMATO,
   DARKSLATE,
-  Font10} from '../../../helpers/globalStyles'
+  Font10,
+  BORDERLINE,
+  LIGHTLATE} from '../../../helpers/globalStyles'
 import { normalize } from '../../../helpers/scallingSize'
 import { capitalizeFirstLetter, convertDate, priceSeparator } from '../../../helpers/validator'
 // import actionsAPI from '../../../redux/actions/transaction'
@@ -64,6 +67,7 @@ export default function TransactionList({navigation}){
     else if (valSort == 2) newArr = arr.sort((a, b) => b.beneficiary_name.localeCompare(a.beneficiary_name))
     else if (valSort == 3) newArr = arr.sort((a, b) => a.created_at.localeCompare(b.created_at))
     else if (valSort == 4) newArr = arr.sort((a, b) => b.created_at.localeCompare(a.created_at))
+    else newArr=arr
     setLoadList(false)
     setListData(newArr)
   }
@@ -79,17 +83,18 @@ export default function TransactionList({navigation}){
   return (
     <View style={{flex: 1}}>
       
-      <View style={{paddingHorizontal: 8, paddingVertical: 15 }}>
+      <View style={{paddingHorizontal: 8, paddingVertical: 15, justifyContent: 'center'}}>
         <TextInput placeholder='Cari nama, bank, atau nominal'
         value={searchValue} onChangeText={(val) => changeValueSearch(val)}
-        style={{backgroundColor: 'pink', height: normalize(62), borderRadius: 8, paddingLeft: '10%', paddingRight: '30%'}} />
-        <View style={{position: 'absolute', top: normalize(36), left: 20}}>
-          <Text style={{}}>ico</Text>
+        style={{backgroundColor: WHITE, height: normalize(62), borderRadius: 8, paddingLeft: '10%', paddingRight: '30%'}} />
+        <View style={{position: 'absolute', left: 18}}>
+          <IconFe name='search' size={20} color={LIGHTLATE} />
         </View>
         <TouchableOpacity onPress={() => setShowModal(true)}
-        style={{flexDirection: 'row', position: 'absolute', top: normalize(36), right: 25}}>
-          <Text>URUTKAN</Text>
-          <Text>ico</Text>
+        style={{position: 'absolute', right: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+          <Text style={Font13('OpenSans-Bold', ORANGE_TOMATO)}>
+            {sortIdx == 1 ? 'Nama A-Z' : sortIdx == 2 ? 'Nama Z-A' : sortIdx == 3 ? 'Tanggal Terbaru' : sortIdx == 4 ? 'Tanggal Terlama' : 'URUTAN' }</Text>
+          <IconFe name='chevron-down' size={22} color={ORANGE_TOMATO} />
         </TouchableOpacity>
       </View>
 
@@ -97,9 +102,11 @@ export default function TransactionList({navigation}){
         { loadList ? <ActivityIndicator size="small" color={'pink'} />
         : listData.length == 0 ? <Text>tidak ada data</Text>
         : <FlatList data={listData} 
+        showsVerticalScrollIndicator={false}
         renderItem={({item, index}) => 
           <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionDetailScreen', {itemDetail: item})}
-          style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
+          style={[{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5},
+          listData.length-1 === index && {marginBottom: 25}]}>
             <View style={{flexDirection: 'row', ...ITEM_CENTER, flex: 1}}>
               <View style={[{width: 8, backgroundColor: MEDIUM_SEAGREEN, height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8},
               item.status.toUpperCase() == 'PENDING' && {backgroundColor: ORANGE_TOMATO}]}/>
@@ -129,7 +136,7 @@ export default function TransactionList({navigation}){
       </View>
 
       <Modal transparent visible={showModal}>
-        <TouchableOpacity 
+        <TouchableOpacity onPress={() => setShowModal(false)}
         style={{flex: 1, backgroundColor: OPACITY_BLACK_5, ...ITEM_CENTER}}>
           <View style={{backgroundColor: WHITE, height: SCREEN_HEIGHT/2, width: SCREEN_HEIGHT/2, borderRadius: 8, padding: 15 }}>
             {filterMenu.map((item, idx) => 

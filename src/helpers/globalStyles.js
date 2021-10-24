@@ -15,7 +15,7 @@ export const WHITESMOKE = '#f7f7f7'
 export const SNOW = '#FCFCFD'
 export const DARKSLATE = '#252B42'
 export const ORANGE_TOMATO = '#fc6543'
-// export const LIGHTLATE = '#7c7c7c'
+export const LIGHTLATE = '#7c7c7c'
 export const BORDERLINE = '#ededed'
 export const MEDIUM_SEAGREEN = '#55b683'
 
