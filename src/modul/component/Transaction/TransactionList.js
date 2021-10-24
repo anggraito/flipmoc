@@ -55,6 +55,8 @@ export default function TransactionList({navigation}){
     setListData(newArr)
   }
 
+  console.log('-----', transaction.isFound, transaction.isLoading, Object.keys(transaction.data).length)
+
   const sortItem = (valSort) => {
     var newArr = []
     var arr = Object.values(transaction.data)
@@ -98,9 +100,9 @@ export default function TransactionList({navigation}){
       </View>
 
       <View style={{paddingHorizontal: 8, flex: 1}}>
-        { transaction.isLoading ? <ActivityIndicator size="small" color={ORANGE_TOMATO} />
-        : transaction.isFound && listData.length == 0 ? <Text>tidak ada data</Text>
-        : <FlatList data={listData} refreshing={refreshing} 
+        { transaction.isLoading || loadList ? <ActivityIndicator size="small" color={ORANGE_TOMATO} />
+        : transaction.isFound && Object.keys(transaction.data).length > 0 ? 
+        <FlatList data={listData} refreshing={refreshing} 
         onRefresh={_onRefresh}
         showsVerticalScrollIndicator={false}
         renderItem={({item, index}) => 
@@ -132,7 +134,10 @@ export default function TransactionList({navigation}){
               </View>
             </View>
           </TouchableOpacity>
-        } />}
+        } />
+      : <View style={ITEM_CENTER}>
+          <Text>Tidak ada data tersedia</Text>
+        </View>}
       </View>
 
       <Modal transparent visible={showModal}>

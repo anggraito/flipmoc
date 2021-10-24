@@ -1,7 +1,7 @@
 import { all } from 'redux-saga/effects'
 import axios from 'axios'
 import { call, put, takeEvery } from 'redux-saga/effects'
-import constants from '../config/constants'
+import constants from '../../config/constants'
 
 function* fetchListTransaction() {
   yield takeEvery(constants.LIST_TRANSACTION, sagaItems)
