@@ -9,15 +9,15 @@ import { convertDate, priceSeparator } from '../../../helpers/validator'
 // import actionsAPI from '../../../redux/actions/transaction'
 // import { searchItem } from './logicTransaction'
 
-export default function TransactionList(){
+export default function TransactionList({navigation}){
   const [searchValue, setSearchValue] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [loadList, setLoadList] = useState(true)
   const [listData, setListData] = useState([])
+  const [sortIdx, setSortIdx] = useState(0)
 
   const {transaction} = useSelector(state => state)
   const dispatch = useDispatch()
-  // console.log('transaction--', Object.values(transaction.data))
 
   useEffect(() => {
     listTransactionAPI()
@@ -28,7 +28,6 @@ export default function TransactionList(){
   }
 
   useEffect(() => {
-    console.log('-----------? nah', transaction.data)
     setListData(Object.values(transaction.data))
     if (Object.values(transaction.data).length > 0) setLoadList(false)
   }, [transaction.data])
@@ -50,6 +49,25 @@ export default function TransactionList(){
     })
     setLoadList(false)
     setListData(newArr)
+  }
+
+  const sortItem = (valSort) => {
+    var newArr = []
+    var arr = Object.values(transaction.data)
+    if (valSort == 1) newArr = arr.sort((a, b) => a.beneficiary_name.localeCompare(b.beneficiary_name))
+    else if (valSort == 2) newArr = arr.sort((a, b) => b.beneficiary_name.localeCompare(a.beneficiary_name))
+    else if (valSort == 3) newArr = arr.sort((a, b) => a.created_at.localeCompare(b.created_at))
+    else if (valSort == 4) newArr = arr.sort((a, b) => b.created_at.localeCompare(a.created_at))
+    setLoadList(false)
+    setListData(newArr)
+  }
+
+  const pressSort = (idx) => {
+    setSortIdx(idx)
+    setTimeout(() => {
+      setShowModal(false)
+      sortItem(idx)
+    },500)
   }
 
   return (
@@ -74,7 +92,8 @@ export default function TransactionList(){
         : listData.length == 0 ? <Text>tidak ada data</Text>
         : <FlatList data={listData} 
         renderItem={({item, index}) => 
-          <View key={index} style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
+          <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionDetailScreen')}
+          style={{backgroundColor: WHITE, flexDirection: 'row', justifyContent: 'space-between', borderRadius: 8, marginVertical: 5}}>
             <View style={{flexDirection: 'row', ...ITEM_CENTER}}>
               <View style={{width: 8, backgroundColor: 'pink', height: normalize(98), marginRight: 20, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
               <View style={{marginVertical: 15}}>
@@ -93,7 +112,7 @@ export default function TransactionList(){
                 <Text style={Font12('OpenSans-Bold')}>{item.status}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         } />}
       </View>
 
@@ -102,10 +121,10 @@ export default function TransactionList(){
         style={{flex: 1, backgroundColor: OPACITY_BLACK_5, ...ITEM_CENTER}}>
           <View style={{backgroundColor: WHITE, height: SCREEN_HEIGHT/2, width: SCREEN_HEIGHT/2, borderRadius: 8, padding: 15 }}>
             {filterMenu.map((item, idx) => 
-              <TouchableOpacity key={idx} onPress={() => setShowModal(false)}
+              <TouchableOpacity key={idx} onPress={() => pressSort(idx)}
               style={{flexDirection: 'row', marginVertical: 20}}>
                 <View style={{borderRadius: 50, borderColor: 'pink', borderWidth: 0.8, width: normalize(18), height: normalize(18), ...ITEM_CENTER, marginRight: 10}}>
-                  <View style={{backgroundColor: 'pink', width: normalize(12), height: normalize(12), borderRadius: 50 }} />
+                  {sortIdx == idx && <View style={{backgroundColor: 'pink', width: normalize(12), height: normalize(12), borderRadius: 50 }} />}
                 </View>
                 <Text style={Font14('OpenSans-SemiBold')}>{item}</Text>
               </TouchableOpacity>
