@@ -1,25 +1,46 @@
-import React, { useState } from 'react'
-import {View, Text, StyleSheet} from 'react-native'
+import React, { useRef, useState } from 'react'
+import {View, Text, StyleSheet, Animated} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Clipboard from '@react-native-clipboard/clipboard'
 import IconAn from 'react-native-vector-icons/AntDesign'
 import IconFe from 'react-native-vector-icons/Feather'
 
-import { BORDERLINE, Font12, Font14, Font16, ORANGE_TOMATO, WHITE } from '../../../helpers/globalStyles'
+import { BORDERLINE, DARKSLATE, Font12, Font13, Font14, Font16, ORANGE_TOMATO, WHITE } from '../../../helpers/globalStyles'
 import { capitalizeFirstLetter, convertDate, priceSeparator } from '../../../helpers/validator'
 import HeaderNav from '../../fragment/header'
 
 export default function TransactionDetail({navigation, route}) {
   const {itemDetail} = route.params
   const [openView, setOpenView] = useState(true)
+  const fadeAnim = useRef(new Animated.Value(0)).current
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 750,
+      useNativeDriver: true
+    }).start(({ finished }) => {
+      if (finished) setTimeout(() => {
+        fadeOut()
+      }, 500)
+    })
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 750,
+      useNativeDriver: true
+    }).start();
+  };
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <HeaderNav colorStatus={WHITE} navigation={navigation} title='Detail Transaksi' />
       <View style={{backgroundColor: WHITE, marginTop: 10}}>
         <View style={{borderBottomWidth: 0.8, borderColor: BORDERLINE, padding: 20, flexDirection: 'row' }}>
           <Text style={Font14('Roboto-Bold')}>ID TRANSAKSI: #{itemDetail.id}</Text>
-          <TouchableOpacity onPress={() => Clipboard.setString(itemDetail.id)}>
+          <TouchableOpacity onPress={() => {Clipboard.setString(itemDetail.id);fadeIn()}}>
             <IconFe name='copy' size={14} style={{marginLeft: 10}} />
           </TouchableOpacity>
         </View>
@@ -66,6 +87,9 @@ export default function TransactionDetail({navigation, route}) {
 
         </View>}
       </View>
+      <Animated.View style={{ position: 'absolute', bottom: 0, width: '100%', backgroundColor: DARKSLATE, padding: 20, opacity: fadeAnim}}>
+        <Text style={Font13('Roboto-Regular', WHITE)}>Berhasil disalin</Text>
+      </Animated.View>
     </View>
   )
 }
