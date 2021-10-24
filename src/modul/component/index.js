@@ -7,7 +7,7 @@ import HeaderNav from '../fragment/header'
 export default function SplaschScreen({navigation}) {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('TransactionListScreen')
+      navigation.replace('TransactionListScreen')
     }, 1000)
   })
 

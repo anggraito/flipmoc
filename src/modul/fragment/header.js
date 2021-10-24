@@ -1,8 +1,8 @@
 import React from 'react'
-import { StatusBar, View, Text, Image, TouchableOpacity } from 'react-native'
-import { NavigationContainer, useIsFocused } from '@react-navigation/native'
-import { normalize } from '../../helpers/scallingSize'
-import { defaultPadding, ROW_BETWEEN_CENTER, SHADOW_OPC, WHITE } from '../../helpers/globalStyles'
+import { StatusBar, View, Text, TouchableOpacity } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import IconFe from 'react-native-vector-icons/Feather'
+import { DARKSLATE, defaultPadding, Font14, Font16, ROW_BETWEEN_CENTER, SHADOW_OPC, WHITE } from '../../helpers/globalStyles'
 
 export default function HeaderNav({colorStatus, title, hidden, navigation}) {
 
@@ -14,9 +14,10 @@ export default function HeaderNav({colorStatus, title, hidden, navigation}) {
       {isFocused ? <StatusBar hidden={hidden} barStyle={colorStatus === WHITE ? "dark-content" : "light-content"} backgroundColor={colorStatus} /> : null}
       {!hidden && <View style={{backgroundColor: WHITE, ...SHADOW_OPC, ...ROW_BETWEEN_CENTER, ...defaultPadding}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text>back</Text>
+          <IconFe name='arrow-left' size={22} color={DARKSLATE} />
         </TouchableOpacity>
-        <Text>{title}</Text>
+        <Text style={Font16('OpenSans-SemiBold')}>{title}</Text>
+        <View style={{width: 20}}/>
       </View>}
     </View>
   )
